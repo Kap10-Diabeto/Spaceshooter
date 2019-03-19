@@ -1,16 +1,26 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.IO;
 
 namespace Spaceshooter
 {
-    /// <summary>
-    /// This is the main type for your game.
-    /// </summary>
     public class Game1 : Game
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+        Texture2D Space;
+        Player Player1;
+        Texture2D startBG;
+        bool mainMenu = true;
+        public static Viewport Viewport
+        {
+            get;
+            private set;
+        }
 
         public Game1()
         {
@@ -18,66 +28,81 @@ namespace Spaceshooter
             Content.RootDirectory = "Content";
         }
 
-        /// <summary>
-        /// Allows the game to perform any initialization it needs to before starting to run.
-        /// This is where it can query for any required services and load any non-graphic
-        /// related content.  Calling base.Initialize will enumerate through any components
-        /// and initialize them as well.
-        /// </summary>
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
+            graphics.IsFullScreen = false;
+            graphics.PreferredBackBufferWidth = 1440;
+            graphics.PreferredBackBufferHeight = 810;
+            graphics.ApplyChanges();
+            Viewport = new Viewport(0, 0, 1440, 810);
 
             base.Initialize();
         }
 
-        /// <summary>
-        /// LoadContent will be called once per game and is the place to load
-        /// all of your content.
-        /// </summary>
         protected override void LoadContent()
         {
-            // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
+            Space = Content.Load<Texture2D>("SpaceB");
+            startBG = Content.Load<Texture2D>("SpaceB");
+            Texture2D x = Content.Load<Texture2D>("Player1");
+            Player1 = new Player(x);
 
-            // TODO: use this.Content to load your game content here
+            Color[] color = new Color[startBG.Width * startBG.Height];
+            startBG.GetData(color);
+            for (int i = 0; i < color.Length; i++)
+            {
+                color[i] *= .5f;
+                color[i].A = 255;
+            }
+            startBG.SetData(color);
         }
 
-        /// <summary>
-        /// UnloadContent will be called once per game and is the place to unload
-        /// game-specific content.
-        /// </summary>
         protected override void UnloadContent()
         {
-            // TODO: Unload any non ContentManager content here
+            
         }
 
-        /// <summary>
-        /// Allows the game to run logic such as updating the world,
-        /// checking for collisions, gathering input, and playing audio.
-        /// </summary>
-        /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
+            if (!mainMenu)
+            {
 
-            // TODO: Add your update logic here
+                Player1.Update();
 
-            base.Update(gameTime);
+                base.Update(gameTime);
+
+            }
+
+            else
+            {
+                if (Keyboard.GetState().IsKeyDown(Keys.A))
+                {
+                    mainMenu = false;
+                    Color[] color = new Color[startBG.Width * startBG.Height];
+                    startBG.GetData(color);
+                    for (int i = 0; i < color.Length; i++)
+                    {
+                        color[i] *= 2f;
+                        color[i].A = 255;
+                    }
+                    startBG.SetData(color);
+                }
+            }
+
         }
+     
 
-        /// <summary>
-        /// This is called when the game should draw itself.
-        /// </summary>
-        /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
-
-            // TODO: Add your drawing code here
-
+            spriteBatch.Begin();
+            spriteBatch.Draw(Space, new Rectangle(0, 0, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight), Color.White);
+            Player1.Draw(spriteBatch);
             base.Draw(gameTime);
+
+            spriteBatch.End();
         }
     }
 }
