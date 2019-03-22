@@ -14,6 +14,7 @@ namespace Spaceshooter
         SpriteBatch spriteBatch;
         Texture2D Space;
         Player Player1;
+        Texture2D ST;
         Texture2D startBG;
         bool mainMenu = true;
         public static Viewport Viewport
@@ -45,6 +46,7 @@ namespace Spaceshooter
             Space = Content.Load<Texture2D>("SpaceB");
             startBG = Content.Load<Texture2D>("SpaceB");
             Texture2D x = Content.Load<Texture2D>("Player1");
+            ST = Content.Load<Texture2D>("starttext");
             Player1 = new Player(x);
 
             Color[] color = new Color[startBG.Width * startBG.Height];
@@ -77,7 +79,7 @@ namespace Spaceshooter
 
             else
             {
-                if (Keyboard.GetState().IsKeyDown(Keys.A))
+                if (Keyboard.GetState().GetPressedKeys().Length>0 )
                 {
                     mainMenu = false;
                     Color[] color = new Color[startBG.Width * startBG.Height];
@@ -98,11 +100,22 @@ namespace Spaceshooter
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
             spriteBatch.Begin();
-            spriteBatch.Draw(Space, new Rectangle(0, 0, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight), Color.White);
-            Player1.Draw(spriteBatch);
+
+            if (!mainMenu)
+            {
+                spriteBatch.Draw(Space, new Rectangle(0, 0, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight), Color.White);
+                Player1.Draw(spriteBatch);
+                spriteBatch.End();
+
+            }
+            else
+            {
+                spriteBatch.Draw(startBG, new Rectangle(0, 0, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight), Color.White);
+                spriteBatch.Draw(ST, new Rectangle(425, 400, 572, 63), Color.White);
+                spriteBatch.End();
+            }
             base.Draw(gameTime);
 
-            spriteBatch.End();
         }
     }
 }

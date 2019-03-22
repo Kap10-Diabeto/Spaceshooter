@@ -16,7 +16,7 @@ namespace Spaceshooter
         public Player(Texture2D tex)
         {
             texture = tex;
-            position = new Vector2(400, 300);
+            position = new Vector2(700, 700);
             hitBox = new Rectangle((int)position.X, (int)position.Y, 60, 60);
 
 
