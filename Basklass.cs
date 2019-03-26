@@ -16,6 +16,11 @@ namespace Spaceshooter
         protected float speed = 10;
         protected bool isDead = false;
 
+        public Vector2 Position
+        {
+            get { return position; }
+        }
+
         public bool IsDead
         {
             get { return isDead; }

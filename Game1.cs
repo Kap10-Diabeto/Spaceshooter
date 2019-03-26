@@ -16,7 +16,11 @@ namespace Spaceshooter
         Player Player1;
         Texture2D ST;
         Texture2D startBG;
+        Texture2D buster;
+        List<Buster> busters = new List<Buster>();
         bool mainMenu = true;
+        KeyboardState oldState;
+
         public static Viewport Viewport
         {
             get;
@@ -48,6 +52,7 @@ namespace Spaceshooter
             Texture2D x = Content.Load<Texture2D>("Player1");
             ST = Content.Load<Texture2D>("starttext");
             Player1 = new Player(x);
+            buster = Content.Load<Texture2D>("Buster");
 
             Color[] color = new Color[startBG.Width * startBG.Height];
             startBG.GetData(color);
@@ -68,12 +73,20 @@ namespace Spaceshooter
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
-            if (!mainMenu)
+            if (Keyboard.GetState().IsKeyDown(Keys.Space) && oldState.IsKeyUp(Keys.Space))
+                busters.Add(new Buster(buster, 6, 1, Player1.Position + new Vector2(30,0)));
+
+                if (!mainMenu)
             {
 
                 Player1.Update();
 
                 base.Update(gameTime);
+
+                foreach (Buster item in busters)
+                {
+                    item.Update();
+                }
 
             }
 
@@ -92,6 +105,7 @@ namespace Spaceshooter
                     startBG.SetData(color);
                 }
             }
+            oldState = Keyboard.GetState();
 
         }
      
@@ -115,6 +129,11 @@ namespace Spaceshooter
                 spriteBatch.End();
             }
             base.Draw(gameTime);
+
+            foreach (var item in busters)
+            {
+                item.Draw(spriteBatch);
+            }
 
         }
     }
