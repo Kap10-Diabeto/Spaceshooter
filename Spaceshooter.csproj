@@ -42,7 +42,9 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Basklass.cs" />
+    <Compile Include="Bullet.cs" />
     <Compile Include="Buster.cs" />
+    <Compile Include="Enemyclass.cs" />
     <Compile Include="Game1.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="Program.cs" />

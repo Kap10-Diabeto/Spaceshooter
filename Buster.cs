@@ -36,7 +36,7 @@ namespace Spaceshooter
             location = pos;
         }
 
-        public void Update()
+        public override void Update()
         {
             frameChange++;
             if (frameChange == 10 && currentFrame != 0)
@@ -47,13 +47,13 @@ namespace Spaceshooter
 
             location.Y-=4;
 
-            if (position.Y<-30)
+            if (position.Y<-50)
             {
                 remove = true;
             }
         }
 
-        public void Draw(SpriteBatch spriteBatch)
+        public override void Draw(SpriteBatch spriteBatch)
         {
             int width = Texture.Width / Columns;
             int height = Texture.Height / Rows;

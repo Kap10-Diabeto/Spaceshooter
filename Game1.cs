@@ -13,6 +13,7 @@ namespace Spaceshooter
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         Texture2D Space;
+        public static List<Basklass> Llist = new List<Basklass>();
         Player Player1;
         Texture2D ST;
         Texture2D startBG;
@@ -50,6 +51,7 @@ namespace Spaceshooter
             Space = Content.Load<Texture2D>("SpaceB");
             startBG = Content.Load<Texture2D>("SpaceB");
             Texture2D x = Content.Load<Texture2D>("Player1");
+            Texture2D b = Content.Load<Texture2D>("Bullet");
             ST = Content.Load<Texture2D>("starttext");
             Player1 = new Player(x);
             buster = Content.Load<Texture2D>("Buster");
@@ -74,7 +76,7 @@ namespace Spaceshooter
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
             if (Keyboard.GetState().IsKeyDown(Keys.Space) && oldState.IsKeyUp(Keys.Space))
-                busters.Add(new Buster(buster, 6, 1, Player1.Position + new Vector2(30,0)));
+                busters.Add(new Buster(buster, 6, 1, Player1.Position + new Vector2(12,0)));
 
                 if (!mainMenu)
             {
@@ -135,6 +137,45 @@ namespace Spaceshooter
                 item.Draw(spriteBatch);
             }
 
+            Bullet b;
+            foreach (var item in Llist){
+                if (item is Bullet)
+                {
+                    b = item as Bullet;
+                }
+            }
+
+        }
+
+        void Bullethit()
+        {
+            List<Basklass> BULLET = Llist.Where(x => x is Bullet).ToList();
+            for (int i = 0; i < BULLET.Count; i++)
+            {
+                for (int j = 0; j < Llist.Count; j++)
+                {
+                    if (BULLET[i].HitBox.Intersects(Llist[j].HitBox)  && !(Llist[j] is Bullet))
+                    {
+                        BULLET[i].IsDead = true;
+                        (Llist[j] as Enemyclass).TaSkada();
+                       
+                    }
+                }
+               
+            }
+        }
+
+        void RemoveEnemy()
+        {
+            List<Basklass> temp = new List<Basklass>();
+            for (int j = 0; j < Llist.Count; j++)
+            {
+                if (!Llist[j].IsDead)
+                    temp.Add(Llist[j]);
+               // else if (Llist[j] is Enemyclass)
+
+                   // explosion.Add(new Explosion(explosion, 9, 9, new Vector2(Llist[j].HitBox.X - 20, Llist[j].HitBox.Y - 10)));
+            }
         }
     }
 }

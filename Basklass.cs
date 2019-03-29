@@ -27,6 +27,12 @@ namespace Spaceshooter
             set { isDead = value; }
         }
 
+        public Rectangle HitBox
+        {
+            get { return hitBox; }
+        }
+
+
         public virtual void Update() { }
 
         public virtual void Draw(SpriteBatch spriteBatch)
