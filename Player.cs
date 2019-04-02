@@ -32,7 +32,7 @@ namespace Spaceshooter
 
         }
 
-        public void Update(GameTime gameTime, GameWindow window)
+        public override void Update()
         {
             KeyboardState state = Keyboard.GetState();
 
@@ -52,10 +52,10 @@ namespace Spaceshooter
             }
             else
             {
-                reloading += (float)gameTime.ElapsedGameTime.TotalSeconds;
+                reloading += (float)Game1.GameTime.ElapsedGameTime.TotalSeconds;
             }
             hitBox.X = (int)position.X;
-            hitBox.X = (int)position.Y;
+            hitBox.Y = (int)position.Y;
 
         }
 

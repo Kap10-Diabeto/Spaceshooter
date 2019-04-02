@@ -18,11 +18,17 @@ namespace Spaceshooter
         Texture2D ST;
         Texture2D startBG;
         Texture2D buster;
+        Texture2D EA;
         List<Buster> busters = new List<Buster>();
         bool mainMenu = true;
         KeyboardState oldState;
 
         public static Viewport Viewport
+        {
+            get;
+            private set;
+        }
+        public static GameTime GameTime
         {
             get;
             private set;
@@ -53,8 +59,10 @@ namespace Spaceshooter
             Texture2D x = Content.Load<Texture2D>("Player1");
             Texture2D b = Content.Load<Texture2D>("Bullet");
             ST = Content.Load<Texture2D>("starttext");
-            Player1 = new Player(x);
+            Player1 = new Player(x, b);
             buster = Content.Load<Texture2D>("Buster");
+            EA = Content.Load<Texture2D>("EnemyA");
+            Llist.Add(new Enemy_A(EA));
 
             Color[] color = new Color[startBG.Width * startBG.Height];
             startBG.GetData(color);
@@ -68,17 +76,18 @@ namespace Spaceshooter
 
         protected override void UnloadContent()
         {
-            
+
         }
 
         protected override void Update(GameTime gameTime)
         {
+            GameTime = gameTime;
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
             if (Keyboard.GetState().IsKeyDown(Keys.Space) && oldState.IsKeyUp(Keys.Space))
-                busters.Add(new Buster(buster, 6, 1, Player1.Position + new Vector2(12,0)));
+                busters.Add(new Buster(buster, 6, 1, Player1.Position + new Vector2(12, 0)));
 
-                if (!mainMenu)
+            if (!mainMenu)
             {
 
                 Player1.Update();
@@ -89,12 +98,16 @@ namespace Spaceshooter
                 {
                     item.Update();
                 }
+                foreach (Basklass item in Llist)
+                {
+                    item.Update();
+                }
 
             }
 
             else
             {
-                if (Keyboard.GetState().GetPressedKeys().Length>0 )
+                if (Keyboard.GetState().GetPressedKeys().Length > 0)
                 {
                     mainMenu = false;
                     Color[] color = new Color[startBG.Width * startBG.Height];
@@ -110,7 +123,7 @@ namespace Spaceshooter
             oldState = Keyboard.GetState();
 
         }
-     
+
 
         protected override void Draw(GameTime gameTime)
         {
@@ -121,6 +134,17 @@ namespace Spaceshooter
             {
                 spriteBatch.Draw(Space, new Rectangle(0, 0, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight), Color.White);
                 Player1.Draw(spriteBatch);
+
+                foreach (var item in busters)
+                {
+                    item.Draw(spriteBatch);
+                }
+
+                foreach (var item in Llist)
+                {
+                    item.Draw(spriteBatch);
+                }
+
                 spriteBatch.End();
 
             }
@@ -132,19 +156,6 @@ namespace Spaceshooter
             }
             base.Draw(gameTime);
 
-            foreach (var item in busters)
-            {
-                item.Draw(spriteBatch);
-            }
-
-            Bullet b;
-            foreach (var item in Llist){
-                if (item is Bullet)
-                {
-                    b = item as Bullet;
-                }
-            }
-
         }
 
         void Bullethit()
@@ -154,14 +165,14 @@ namespace Spaceshooter
             {
                 for (int j = 0; j < Llist.Count; j++)
                 {
-                    if (BULLET[i].HitBox.Intersects(Llist[j].HitBox)  && !(Llist[j] is Bullet))
+                    if (BULLET[i].HitBox.Intersects(Llist[j].HitBox) && !(Llist[j] is Bullet))
                     {
                         BULLET[i].IsDead = true;
                         (Llist[j] as Enemyclass).TaSkada();
-                       
+
                     }
                 }
-               
+
             }
         }
 
@@ -172,9 +183,9 @@ namespace Spaceshooter
             {
                 if (!Llist[j].IsDead)
                     temp.Add(Llist[j]);
-               // else if (Llist[j] is Enemyclass)
+                // else if (Llist[j] is Enemyclass)
 
-                   // explosion.Add(new Explosion(explosion, 9, 9, new Vector2(Llist[j].HitBox.X - 20, Llist[j].HitBox.Y - 10)));
+                // explosion.Add(new Explosion(explosion, 9, 9, new Vector2(Llist[j].HitBox.X - 20, Llist[j].HitBox.Y - 10)));
             }
         }
     }
