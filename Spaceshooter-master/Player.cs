@@ -14,11 +14,11 @@ namespace Spaceshooter
         Texture2D BulletTexture;
         float firerate = 0.5f;
         float reloading = 0;
-        int hp;
+        int HP;
 
         public int Health
         {
-            get { return hp; }
+            get { return HP; }
       
         }
 
@@ -28,7 +28,7 @@ namespace Spaceshooter
             BulletTexture = Bt;
             position = new Vector2(700, 700);
             hitBox = new Rectangle((int)position.X, (int)position.Y, 60, 60);
-            hp = 3;
+            HP = 3;
 
         }
 
@@ -57,6 +57,11 @@ namespace Spaceshooter
             hitBox.X = (int)position.X;
             hitBox.Y = (int)position.Y;
 
+        }
+
+        public void LooseHP()
+        {
+            HP--;
         }
 
     }

@@ -16,12 +16,19 @@ namespace Spaceshooter
         public static List<Basklass> Llist = new List<Basklass>();
         Player Player1;
         Texture2D ST;
+        int points = 0;
+        int highscore;
         Texture2D startBG;
         Texture2D buster;
         Texture2D EA;
+        Texture2D HPHeart;
+        SpriteFont pointsfont;
+        List<Explosion> explosions = new List<Explosion>();
+        Texture2D explosion;
         List<Buster> busters = new List<Buster>();
         Random ran = new Random();
         bool mainMenu = true;
+        const string FILEPATH = @"C:\Users\Admin\Desktop\Spaceshooter-master\Spaceshooter-master\score.txt";
         KeyboardState oldState;
 
         public static Viewport Viewport
@@ -39,6 +46,23 @@ namespace Spaceshooter
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
+
+            if (File.Exists("score.txt"))
+            {
+                StreamReader sr = new StreamReader("score.txt");
+                string s = sr.ReadLine();
+                int.TryParse(s, out highscore);
+                sr.Close();
+            }
+
+            else
+            {
+                File.Create("score.txt");
+                StreamWriter sw = new StreamWriter("score.txt");
+                highscore = 0;
+                sw.WriteLine("0");
+                sw.Close();
+            }
         }
 
         protected override void Initialize()
@@ -60,10 +84,13 @@ namespace Spaceshooter
             Texture2D x = Content.Load<Texture2D>("Player1");
             Texture2D b = Content.Load<Texture2D>("Bullet");
             ST = Content.Load<Texture2D>("starttext");
+            HPHeart = Content.Load<Texture2D>("HPH");
+            pointsfont = Content.Load<SpriteFont>("Pointsfont");
             Player1 = new Player(x, b);
             buster = Content.Load<Texture2D>("Buster");
             EA = Content.Load<Texture2D>("EnemyA");
             Llist.Add(new Enemy_A(EA));
+            explosion = Content.Load<Texture2D>("BOOM");
 
             Color[] color = new Color[startBG.Width * startBG.Height];
             startBG.GetData(color);
@@ -113,8 +140,15 @@ namespace Spaceshooter
                 {
                     item.Update();
                 }
+
                 Bullethit();
                 RemoveEnemy();
+
+                foreach (Explosion item in explosions)
+                {
+                    item.Update();
+                }
+                Death();
             }
 
             else
@@ -157,6 +191,13 @@ namespace Spaceshooter
                     item.Draw(spriteBatch);
                 }
 
+                for (int i = 1; i <= Player1.Health; i++)
+                {
+                    spriteBatch.Draw(HPHeart, new Rectangle(30 * i, 30, 30, 30), Color.White);
+                }
+
+                spriteBatch.DrawString(pointsfont, points.ToString(), new Vector2(Window.ClientBounds.Width - 50, 30), Color.White);
+
                 spriteBatch.End();
 
             }
@@ -167,6 +208,11 @@ namespace Spaceshooter
                 spriteBatch.End();
             }
             base.Draw(gameTime);
+
+            foreach (var item in explosions)
+            {
+                item.Draw(spriteBatch);
+            }
 
         }
 
@@ -181,6 +227,7 @@ namespace Spaceshooter
                     {
                         BULLET[i].IsDead = true;
                         (Llist[j] as Enemyclass).TakeDmg();
+                        points = points + 1;
 
                     }
                 }
@@ -195,11 +242,39 @@ namespace Spaceshooter
             {
                 if (!Llist[j].IsDead)
                     temp.Add(Llist[j]);
-                //else if (Llist[j] is Enemyclass)
+                else if (Llist[j] is Enemyclass)
 
-                // explosion.Add(new Explosion(explosion, 9, 9, new Vector2(Llist[j].HitBox.X - 20, Llist[j].HitBox.Y - 10)));
+                explosions.Add(new Explosion(explosion, 9, 9, new Vector2(Llist[j].HitBox.X - 20, Llist[j].HitBox.Y - 10)));
             }
             Llist = temp;
+        }
+
+        void Death()
+        {
+            for (int i = 0; i < Llist.Count; i++)
+            {
+
+                if (Llist[i].HitBox.Y > Window.ClientBounds.Height)
+                {
+                    Llist[i].IsDead = true;
+                    Player1.LooseHP();
+                    if (Player1.Health == 0)
+                    {
+                        if (points > highscore)
+                        {
+                            StreamWriter sw = new StreamWriter("score.txt");
+                            sw.Write(points);
+                            highscore = points;
+                            sw.Close();
+                        }
+
+
+                        Exit();
+                    }
+                }
+
+            }
+
         }
     }
 }
