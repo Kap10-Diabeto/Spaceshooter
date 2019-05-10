@@ -8,7 +8,7 @@ using Microsoft.Xna.Framework;
 
 namespace Spaceshooter
 {
-    public class Buster:Basklass
+    public class Buster: Basklass //Denna klassen använder sig av en spritesheet för att skapa ett animerad superskott som kallas buster
     {
         public Texture2D Texture { get; set; }
         public int Rows { get; set; }

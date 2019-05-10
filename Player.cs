@@ -11,28 +11,29 @@ namespace Spaceshooter
 {
     class Player : Basklass
     {
-        Texture2D BulletTexture;
-        float firerate = 0.5f;
+        //Bestämmer spelarens koppling till skott. Ritar ut och bestämmer hur snabbt man skjuter och laddar
+        Texture2D BulletTexture; 
+        float firerate = 0.1f;
         float reloading = 0;
-        int hp;
+        int HP;
 
-        public int Health
+        public int Health //Ger spelaren hp
         {
-            get { return hp; }
+            get { return HP; }
       
         }
 
-        public Player(Texture2D tex, Texture2D Bt)
+        public Player(Texture2D tex, Texture2D Bt) //Ritar ut spelaren och skotten samt ger spelaren en storlek och bestämmer var den ska "spawna in"
         {
             texture = tex;
             BulletTexture = Bt;
             position = new Vector2(700, 700);
             hitBox = new Rectangle((int)position.X, (int)position.Y, 60, 60);
-            hp = 3;
+            HP = 3;
 
         }
 
-        public override void Update()
+        public override void Update() ////Uppdaterar spelarens alla metoder och funktioner. Dvs det gör så att allt körs som det ska
         {
             KeyboardState state = Keyboard.GetState();
 
@@ -57,6 +58,11 @@ namespace Spaceshooter
             hitBox.X = (int)position.X;
             hitBox.Y = (int)position.Y;
 
+        }
+
+        public void LooseHP() //Ger spelaren förmågan att förlora HP
+        {
+            HP--;
         }
 
     }

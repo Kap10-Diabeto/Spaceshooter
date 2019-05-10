@@ -45,7 +45,9 @@
     <Compile Include="Bullet.cs" />
     <Compile Include="Buster.cs" />
     <Compile Include="Enemy A.cs" />
+    <Compile Include="Enemy B.cs" />
     <Compile Include="Enemyclass.cs" />
+    <Compile Include="Explosion.cs" />
     <Compile Include="Game1.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="Program.cs" />

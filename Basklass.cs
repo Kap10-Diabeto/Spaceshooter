@@ -8,13 +8,13 @@ using System.Threading.Tasks;
 
 namespace Spaceshooter
 {
-    public class Basklass
+    public class Basklass //Här samlas attribut som är gemensamt för alla andra klasser
     {
-        protected Texture2D texture;
-        protected Vector2 position;
-        protected Rectangle hitBox;
-        protected float speed = 10;
-        protected bool isDead = false;
+        protected Texture2D texture; //Skapar ett texturattribut
+        protected Vector2 position; //Ger en position
+        protected Rectangle hitBox; //Ger en hitbox
+        protected float speed = 20; //Ger en hastighet
+        protected bool isDead = false; //Ger möjligheten att tas bort
 
         public Vector2 Position
         {

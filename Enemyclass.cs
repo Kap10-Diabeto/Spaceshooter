@@ -5,25 +5,32 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-namespace Spaceshooter
+namespace Spaceshooter //Basklassen för fienderna 
 {
-    public class Enemyclass : Basklass
+
+    enum EnemySpeed //Skapar en enumfunktion med en varibel för långsam hastighet, och en med snabb 
     {
-        protected Random ran = new Random();
-        protected int hp;
+        Slow = 1 ,
+        Fast = 2
+    }
+
+    public class Enemyclass : Basklass //Ärver av basklass
+    {
+        protected Random ran = new Random(); //Ger alla fiender som ärver av klassen random
+        protected int hp; //Ger alla fiender som ärver av klassen hp
 
         public Enemyclass(int hp)
         {
             this.hp = hp;
         }
 
-        public override void Update()
+        public override void Update() //Uppdaterar alla fiender som ärver av klassens speed och position
         {
             position.Y += speed;
             hitBox.Y = (int)position.Y;
         }
 
-        public void TaSkada()
+        public void TakeDmg() // //Ger alla fiender som ärver av klassen förmågan att ta skada och "dö"
         {
             hp--;
             if (hp <= 0)
